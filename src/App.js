@@ -6,7 +6,7 @@ import RecipeArchiveShow from './components/RecipeArchiveShow'
 import RecipesContainer from './containers/RecipesContainer'
 import Header from './components/Header'
 import { connect } from 'react-redux'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import {getRecipes} from './actions/recipeActions'
 
 
@@ -29,20 +29,21 @@ class App extends Component {
         <Router>
           <Header />
           <Switch>
-            <Route exact path="/recipes" >
+            <Route exact path="/">
+              <Redirect to="/recipes" />  
+            </Route>
+            <Route exact path="/recipes">
               <RecipesContainer />
             </Route>
-            <Route path="/recipes/new" >
+            <Route path="/recipes/new">
               <RecipeForm />
             </Route>
             <Route path="/recipes/archive/:id" component={(routeInfo) => {
               
               const id = parseInt(routeInfo.match.params.id)
               const recipe = !!this.props.recipes ? this.props.recipes.find(r => parseInt(r.idMeal) === id) : null
-              // console.log(recipe)
               return !!recipe ? <RecipeArchiveShow routeInfo={routeInfo} id={recipe.idMeal} recipe={recipe}/> : <div>Recipe not found</div>
             }}/>
-
             
             <Route path="/recipes/:id"  component={(routeInfo) => {
               const id = parseInt(routeInfo.match.params.id)
